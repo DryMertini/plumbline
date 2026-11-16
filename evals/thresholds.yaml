@@ -1,0 +1,18 @@
+# The CI quality gate. `plumbline eval --gate` exits non-zero if any bound is violated.
+# Bounds sit a little below the committed baseline (reports/baseline.md) so that noise-free,
+# deterministic runs pass and a genuine regression does not.
+min:
+  retrieval/hybrid+rerank/metrics/recall@5: 0.85
+  retrieval/hybrid+rerank/metrics/mrr@10: 0.65
+  retrieval/bm25/metrics/recall@10: 0.92
+  answers/metrics/answer_accuracy: 0.55
+  answers/metrics/refusal_accuracy: 0.9
+  answers/metrics/citation_precision: 0.9
+  resilience/everything/resilient/availability: 0.99
+  resilience/outage/resilient/availability: 0.99
+  resilience/everything/resilient/correct: 0.5
+max:
+  answers/metrics/failure_rate: 0.0
+  answers/metrics/false_abstain_rate: 0.15
+  resilience/bad-outputs/resilient/poisoned_served: 0.0
+  resilience/everything/resilient/poisoned_served: 0.0

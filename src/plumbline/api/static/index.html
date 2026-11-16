@@ -1,0 +1,430 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>plumbline</title>
+<style>
+:root {
+  color-scheme: light;
+  --bg: #f4f3ef; --surface: #fcfcfb; --sunken: #efeee9; --border: rgba(11,11,11,.10);
+  --text: #0b0b0b; --text-2: #52514e; --text-3: #7b7a74;
+  --accent: #2a78d6; --accent-soft: #d8e6f8; --accent-ink: #1b5fb3;
+  --good: #0ca30c; --good-ink: #006300; --warning: #fab219; --serious: #ec835a; --critical: #d03b3b;
+  --mark: #fff1b8;
+}
+@media (prefers-color-scheme: dark) {
+  :root {
+    color-scheme: dark;
+    --bg: #111110; --surface: #1a1a19; --sunken: #232322; --border: rgba(255,255,255,.10);
+    --text: #f0efec; --text-2: #c3c2b7; --text-3: #8f8e86;
+    --accent: #3987e5; --accent-soft: #1d3250; --accent-ink: #7fb2f0;
+    --good-ink: #0ca30c; --mark: #5a4a12;
+  }
+}
+* { box-sizing: border-box; }
+body { margin: 0; background: var(--bg); color: var(--text);
+  font: 14px/1.5 ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif; }
+code, .mono { font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 12px; }
+header { display: flex; align-items: center; gap: 24px; padding: 14px 24px;
+  background: var(--surface); border-bottom: 1px solid var(--border); flex-wrap: wrap; }
+header h1 { font-size: 17px; margin: 0; letter-spacing: -.01em; }
+header h1 span { color: var(--text-3); font-weight: 400; margin-left: 8px; font-size: 13px; }
+nav { display: flex; gap: 4px; }
+nav button { border: 0; background: none; color: var(--text-2); padding: 6px 12px; border-radius: 6px;
+  font: inherit; cursor: pointer; }
+nav button.on { background: var(--accent-soft); color: var(--accent-ink); font-weight: 600; }
+#chain { margin-left: auto; color: var(--text-3); font-size: 12px; }
+main { max-width: 1180px; margin: 0 auto; padding: 20px 24px 60px; }
+section { display: none; } section.on { display: block; }
+.card { background: var(--surface); border: 1px solid var(--border); border-radius: 10px;
+  padding: 16px 18px; margin-bottom: 16px; }
+.card h2 { font-size: 13px; text-transform: uppercase; letter-spacing: .05em; color: var(--text-3);
+  margin: 0 0 10px; font-weight: 600; }
+.grid { display: grid; grid-template-columns: minmax(0, 3fr) minmax(0, 2fr); gap: 16px; }
+@media (max-width: 900px) { .grid { grid-template-columns: 1fr; } }
+.row { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; }
+input[type=text] { flex: 1; min-width: 240px; padding: 10px 12px; border-radius: 8px;
+  border: 1px solid var(--border); background: var(--surface); color: var(--text); font: inherit; }
+select, button.btn { padding: 8px 12px; border-radius: 8px; border: 1px solid var(--border);
+  background: var(--surface); color: var(--text); font: inherit; cursor: pointer; }
+button.primary { background: var(--accent); color: #fff; border-color: transparent; font-weight: 600; }
+button.btn.on { background: var(--accent-soft); color: var(--accent-ink); border-color: var(--accent); }
+.chips { display: flex; gap: 6px; flex-wrap: wrap; margin-top: 10px; }
+.chip { border: 1px solid var(--border); background: var(--sunken); color: var(--text-2);
+  border-radius: 999px; padding: 3px 10px; font-size: 12px; cursor: pointer; }
+.badge { display: inline-flex; align-items: center; gap: 6px; padding: 2px 10px; border-radius: 999px;
+  font-size: 12px; font-weight: 600; border: 1px solid var(--border); background: var(--sunken); }
+.dot { width: 8px; height: 8px; border-radius: 50%; display: inline-block; }
+.s-answered .dot, .s-ok .dot, .s-closed .dot, .s-pass .dot { background: var(--good); }
+.s-degraded .dot, .s-half_open .dot { background: var(--warning); }
+.s-abstained .dot, .s-skipped .dot { background: var(--accent); }
+.s-failed .dot, .s-error .dot, .s-open .dot, .s-rejected .dot { background: var(--critical); }
+.s-invalid .dot { background: var(--serious); }
+.claim { padding: 10px 0; border-top: 1px solid var(--border); }
+.claim:first-child { border-top: 0; }
+.cite { display: inline-block; margin: 6px 6px 0 0; font-size: 12px; padding: 2px 8px; border-radius: 6px;
+  background: var(--accent-soft); color: var(--accent-ink); cursor: pointer; border: 0; }
+.muted { color: var(--text-3); } .small { font-size: 12px; }
+table { width: 100%; border-collapse: collapse; font-size: 13px; }
+th { text-align: left; color: var(--text-3); font-weight: 600; font-size: 12px; padding: 6px 8px;
+  border-bottom: 1px solid var(--border); white-space: nowrap; }
+td { padding: 6px 8px; border-bottom: 1px solid var(--border); vertical-align: top; }
+td.num, th.num { text-align: right; font-variant-numeric: tabular-nums; }
+.meter { display: flex; align-items: center; gap: 8px; justify-content: flex-end; }
+.meter i { display: block; width: 72px; height: 8px; border-radius: 4px; background: var(--accent-soft);
+  overflow: hidden; flex: none; }
+.meter i b { display: block; height: 100%; background: var(--accent); border-radius: 4px; }
+.meter.bad i { background: color-mix(in srgb, var(--critical) 18%, transparent); }
+.meter.bad i b { background: var(--critical); }
+.meter span { min-width: 48px; text-align: right; font-variant-numeric: tabular-nums; }
+.timeline { font-size: 12px; max-height: 300px; overflow: auto; }
+.timeline div { display: flex; gap: 10px; padding: 2px 0; }
+.timeline .t { color: var(--text-3); width: 62px; text-align: right; flex: none;
+  font-variant-numeric: tabular-nums; }
+.ev-err { color: var(--critical); } .ev-warn { color: var(--serious); } .ev-ok { color: var(--good-ink); }
+.span { display: grid; grid-template-columns: 120px 1fr 70px; gap: 8px; align-items: center;
+  font-size: 12px; padding: 3px 0; }
+.span .track { height: 8px; background: var(--sunken); border-radius: 4px; position: relative; }
+.span .track b { position: absolute; top: 0; height: 8px; min-width: 2px; background: var(--accent);
+  border-radius: 4px; }
+.hit { border-top: 1px solid var(--border); padding: 8px 0; font-size: 13px; }
+.hit:first-child { border-top: 0; }
+.hit .txt { color: var(--text-2); display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical;
+  overflow: hidden; }
+.hit.open .txt { display: block; white-space: pre-wrap; }
+mark { background: var(--mark); color: inherit; border-radius: 2px; }
+.tiles { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 12px; }
+.tile { background: var(--sunken); border-radius: 8px; padding: 10px 12px; }
+.tile .v { font-size: 22px; font-weight: 650; font-variant-numeric: tabular-nums; }
+.tile .l { color: var(--text-3); font-size: 12px; }
+.slider { display: grid; grid-template-columns: 150px 1fr 44px; gap: 10px; align-items: center;
+  padding: 3px 0; font-size: 13px; }
+.strip { display: flex; gap: 3px; flex-wrap: wrap; margin-top: 10px; }
+.strip i { width: 14px; height: 22px; border-radius: 3px; background: var(--sunken); }
+.strip i.answered { background: var(--good); } .strip i.degraded { background: var(--warning); }
+.strip i.abstained { background: var(--accent); } .strip i.failed { background: var(--critical); }
+.legend { display: flex; gap: 14px; flex-wrap: wrap; font-size: 12px; color: var(--text-2); margin-top: 8px; }
+.legend span { display: inline-flex; align-items: center; gap: 5px; }
+.check { display: flex; gap: 8px; font-size: 13px; padding: 2px 0; }
+p.lead { color: var(--text-2); margin: 0 0 12px; max-width: 78ch; }
+label.tog { display: inline-flex; gap: 6px; align-items: center; font-size: 13px; color: var(--text-2); }
+</style>
+</head>
+<body>
+<header>
+  <h1>plumbline<span>the 90% of an LLM app that isn't the LLM</span></h1>
+  <nav id="nav">
+    <button data-tab="ask" class="on">Ask</button>
+    <button data-tab="chaos">Reliability lab</button>
+    <button data-tab="evals">Evals</button>
+    <button data-tab="corpus">Corpus</button>
+  </nav>
+  <div id="chain"></div>
+</header>
+<main>
+
+<section id="ask" class="on">
+  <div class="card">
+    <div class="row">
+      <input id="q" type="text" placeholder="Ask about the papers in the library…" autocomplete="off">
+      <select id="mode" title="Retrieval mode">
+        <option>hybrid+rerank</option><option>hybrid</option><option>bm25</option><option>dense</option>
+      </select>
+      <button class="btn primary" id="go">Ask</button>
+    </div>
+    <div class="row" style="margin-top:10px">
+      <label class="tog"><input type="checkbox" id="resilience" checked> retries, breaker and fallback</label>
+      <label class="tog"><input type="checkbox" id="validation" checked> output validation</label>
+      <span class="muted small">Switch these off to see what a naive pipeline would have served.</span>
+    </div>
+    <div class="chips" id="examples"></div>
+  </div>
+  <div class="grid">
+    <div>
+      <div class="card" id="answerCard"><h2>Answer</h2><div id="answer" class="muted">Ask a question to see a cited answer.</div></div>
+      <div class="card"><h2>Retrieved passages</h2><div id="hits" class="muted">Nothing retrieved yet.</div></div>
+    </div>
+    <div>
+      <div class="card"><h2>What happened</h2><div id="timeline" class="timeline muted">Pipeline events stream here as they occur.</div></div>
+      <div class="card"><h2>Stage timings</h2><div id="spans" class="muted">-</div></div>
+      <div class="card"><h2>Output checks</h2><div id="checks" class="muted">-</div></div>
+    </div>
+  </div>
+</section>
+
+<section id="chaos">
+  <div class="card">
+    <h2>Inject failures into the primary model</h2>
+    <p class="lead">Each slider is the probability that a call to the primary model fails that way. Transport faults
+      are handled by retries, the circuit breaker and fallback; content faults are caught by the output validator.</p>
+    <div class="row" id="profiles"></div>
+    <div id="sliders" style="margin-top:12px"></div>
+  </div>
+  <div class="grid">
+    <div class="card">
+      <h2>Send traffic</h2>
+      <div class="row">
+        <button class="btn primary" id="burst">Send 30 requests</button>
+        <button class="btn" id="reset">Reset breakers and counters</button>
+        <label class="tog"><input type="checkbox" id="burstNaive"> unprotected (no retries, no validation)</label>
+      </div>
+      <div class="strip" id="strip"></div>
+      <div class="legend">
+        <span><i class="dot" style="background:var(--good)"></i>answered</span>
+        <span><i class="dot" style="background:var(--warning)"></i>degraded but served</span>
+        <span><i class="dot" style="background:var(--accent)"></i>abstained</span>
+        <span><i class="dot" style="background:var(--critical)"></i>failed</span>
+      </div>
+      <div id="burstSummary" class="small muted" style="margin-top:10px"></div>
+    </div>
+    <div class="card"><h2>Circuit breakers</h2><div id="breakers"></div></div>
+  </div>
+  <div class="card"><h2>Since last reset</h2><div class="tiles" id="counters"></div></div>
+  <div class="card"><h2>Recent requests</h2><div id="recent"></div></div>
+</section>
+
+<section id="evals"><div id="evalBody" class="card muted">Loading…</div></section>
+<section id="corpus"><div id="corpusBody" class="card muted">Loading…</div></section>
+
+</main>
+<script>
+const $ = (s) => document.querySelector(s);
+const esc = (s) => String(s ?? "").replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
+const pct = (x) => (x == null ? "n/a" : (x * 100).toFixed(1) + "%");
+const api = async (path, body) => {
+  const r = await fetch(path, body === undefined ? {} : { method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify(body) });
+  if (!r.ok) throw new Error((await r.json().catch(() => ({}))).detail || r.statusText);
+  return r.json();
+};
+const badge = (status, label) => `<span class="badge s-${esc(status)}"><i class="dot"></i>${esc(label ?? status)}</span>`;
+const meter = (v, bad) => `<div class="meter${bad ? " bad" : ""}"><i><b style="width:${Math.round((v ?? 0) * 100)}%"></b></i><span>${pct(v)}</span></div>`;
+
+/* ---------- tabs ---------- */
+function showTab(name) {
+  document.querySelectorAll("nav button").forEach((b) => b.classList.toggle("on", b.dataset.tab === name));
+  document.querySelectorAll("section").forEach((s) => s.classList.toggle("on", s.id === name));
+  if (name === "chaos") refreshStatus();
+  if (name === "evals") loadEvals();
+  if (name === "corpus") loadCorpus();
+}
+$("#nav").addEventListener("click", (e) => e.target.dataset.tab && showTab(e.target.dataset.tab));
+
+/* ---------- ask ---------- */
+const EVENT_TEXT = {
+  stage_start: (e) => null,
+  stage_end: (e) => [`${e.stage} finished in ${e.ms} ms`, ""],
+  retrieval_gate: (e) => [`retrieval gate: best passage covers ${pct(e.confidence)} of the question (needs ${pct(e.threshold)}) - not calling the model`, "ev-warn"],
+  attempt_start: (e) => [`${e.provider}: attempt ${e.attempt}${e.repair ? " (repair turn)" : ""}`, ""],
+  attempt_error: (e) => [`${e.provider}: ${e.kind} - ${e.detail}${e.retryable ? " (retryable)" : ""}`, "ev-err"],
+  backoff: (e) => [`backing off ${e.wait_ms} ms before retrying`, "ev-warn"],
+  attempt_invalid: (e) => [`${e.provider}: reply blocked by validator - ${e.issues.map((i) => i.code).join(", ")}`, "ev-err"],
+  repair: (e) => [`${e.provider}: sending the validator's findings back for one repair`, "ev-warn"],
+  attempt_ok: (e) => [`${e.provider}: reply accepted (${e.validation}) in ${e.latency_ms} ms`, "ev-ok"],
+  breaker_opened: (e) => [`circuit breaker for ${e.provider} opened`, "ev-err"],
+  provider_skipped: (e) => [`${e.provider} skipped - ${e.reason}`, "ev-warn"],
+  provider_exhausted: (e) => [`${e.provider} gave up - trying the next provider`, "ev-warn"],
+  deadline: (e) => [`request deadline exceeded`, "ev-err"],
+  done: (e) => [`done: ${e.status}`, "ev-ok"],
+};
+function addEvent(e) {
+  const fn = EVENT_TEXT[e.type]; const out = fn ? fn(e) : [e.type, ""];
+  if (!out) return;
+  const tl = $("#timeline");
+  tl.insertAdjacentHTML("beforeend", `<div class="${out[1]}"><span class="t">${e.t_ms} ms</span><span>${esc(out[0])}</span></div>`);
+  tl.scrollTop = tl.scrollHeight;
+}
+async function streamAsk(body, onEvent) {
+  const r = await fetch("/api/ask", { method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify(body) });
+  if (!r.ok) throw new Error((await r.json().catch(() => ({}))).detail || r.statusText);
+  const reader = r.body.getReader(); const dec = new TextDecoder(); let buf = "", result = null;
+  for (;;) {
+    const { value, done } = await reader.read();
+    if (done) break;
+    buf += dec.decode(value, { stream: true });
+    let nl;
+    while ((nl = buf.indexOf("\n")) >= 0) {
+      const line = buf.slice(0, nl); buf = buf.slice(nl + 1);
+      if (!line.trim()) continue;
+      const ev = JSON.parse(line);
+      if (ev.type === "result") result = ev.result;
+      else if (ev.type === "fatal") throw new Error(ev.detail);
+      else onEvent && onEvent(ev);
+    }
+  }
+  return result;
+}
+function highlight(text, quote) {
+  const t = esc(text); const q = esc(quote || "");
+  const i = q ? t.indexOf(q) : -1;
+  return i < 0 ? t : t.slice(0, i) + "<mark>" + q + "</mark>" + t.slice(i + q.length);
+}
+function renderResult(r) {
+  const head = `<div class="row" style="margin-bottom:8px">${badge(r.status)}
+    <span class="muted small">${r.served_by ? "served by " + esc(r.served_by) + " (" + esc(r.model) + ")" : "no model call"}
+    · ${r.trace.total_ms} ms · ${r.retries} failed attempt(s)${r.fallback_used ? " · fallback used" : ""}</span></div>`;
+  const reason = r.reason ? `<p class="muted" style="margin:6px 0">${esc(r.reason)}</p>` : "";
+  const claims = r.claims.map((c) => `<div class="claim">${esc(c.text)}<div>${
+    c.citations.map((x) => `<button class="cite" data-id="${esc(x.id)}" data-quote="${esc(c.quote)}">${esc(x.short)} · p.${x.page} · ${esc(x.section.split(" > ").pop())}</button>`).join("")
+    || '<span class="badge s-failed"><i class="dot"></i>no valid citation</span>'}</div></div>`).join("");
+  $("#answer").className = ""; $("#answer").innerHTML = head + reason + claims;
+
+  const ret = r.retrieval;
+  if (ret) {
+    const flagged = ret.flagged.length ? `<p class="ev-err small">${ret.flagged.length} passage(s) withheld from the model: ${ret.flagged.map((f) => esc(f.id + " (" + f.rule + ")")).join(", ")}</p>` : "";
+    $("#hits").className = ""; $("#hits").innerHTML = flagged + `<p class="muted small" style="margin:0 0 6px">mode <code>${esc(ret.mode)}</code> · query coverage ${pct(ret.confidence)} · click a passage to expand</p>` +
+      ret.hits.map((h, i) => `<div class="hit" id="hit-${esc(h.chunk_id)}" data-text="${esc(h.text)}">
+        <div><b>${i + 1}. ${esc(h.short)}</b> <span class="muted">· ${esc(h.section)} · p.${h.page_start} · ${esc(h.kind)}</span>
+        <span class="muted small mono" style="float:right">${Object.entries(h.ranks).map(([k, v]) => k + "#" + v).join(" ")} · ${h.score.toFixed(3)}</span></div>
+        <div class="txt">${esc(h.text)}</div></div>`).join("");
+  } else { $("#hits").innerHTML = "-"; }
+
+  const total = Math.max(r.trace.total_ms, 0.1);
+  $("#spans").className = ""; $("#spans").innerHTML = r.trace.spans.map((s) => `<div class="span"><span>${esc(s.name)}</span>
+    <span class="track"><b style="left:${(s.start_ms / total) * 100}%;width:${Math.max((s.ms / total) * 100, .5)}%"></b></span>
+    <span class="muted" style="text-align:right">${s.ms} ms</span></div>`).join("") || "-";
+
+  const v = r.validation;
+  $("#checks").className = ""; $("#checks").innerHTML = v ? `<div style="margin-bottom:6px">${badge(v.status, "validator: " + v.status)}
+    <span class="muted small"> ${v.claims_kept}/${v.claims_in} claims kept</span></div>` +
+    v.checks.map((c) => `<div class="check"><span>${c.passed ? "✓" : "✗"}</span><span>${esc(c.name.replaceAll("_", " "))}
+      <span class="muted">${esc(c.detail)}</span></span></div>`).join("") +
+    v.issues.map((i) => `<div class="check ev-err"><span>!</span><span>${esc(i.message)}</span></div>`).join("")
+    : '<span class="muted">The model was not called.</span>';
+}
+$("#hits").addEventListener("click", (e) => { const h = e.target.closest(".hit"); if (h) h.classList.toggle("open"); });
+$("#answer").addEventListener("click", (e) => {
+  const b = e.target.closest(".cite"); if (!b) return;
+  const hit = document.getElementById("hit-" + b.dataset.id); if (!hit) return;
+  document.querySelectorAll(".hit .txt").forEach((t) => { t.innerHTML = esc(t.parentElement.dataset.text); });
+  hit.classList.add("open");
+  hit.querySelector(".txt").innerHTML = highlight(hit.dataset.text, b.dataset.quote);
+  hit.scrollIntoView({ behavior: "smooth", block: "center" });
+});
+async function ask() {
+  const question = $("#q").value.trim(); if (!question) return;
+  $("#go").disabled = true; $("#timeline").className = "timeline"; $("#timeline").innerHTML = "";
+  $("#answer").className = "muted"; $("#answer").textContent = "Working…";
+  try {
+    renderResult(await streamAsk({ question, mode: $("#mode").value, resilience: $("#resilience").checked, validation: $("#validation").checked }, addEvent));
+  } catch (err) { $("#answer").innerHTML = `<span class="ev-err">${esc(err.message)}</span>`; }
+  $("#go").disabled = false;
+}
+$("#go").addEventListener("click", ask);
+$("#q").addEventListener("keydown", (e) => e.key === "Enter" && ask());
+
+/* ---------- reliability lab ---------- */
+const FAULTS = [["timeout", "Timeout (call hangs)"], ["rate_limit", "Rate limit (429)"], ["server_error", "Server error (503)"],
+  ["malformed_json", "Truncated JSON"], ["schema_violation", "Schema drift"], ["bad_citation", "Cites a ghost passage"],
+  ["ungrounded_claim", "Fabricated claim"]];
+let examplesList = [];
+function renderStatus(s) {
+  $("#chain").textContent = "chain: " + s.chain.map((p) => p.name).join(" → ");
+  const active = Object.entries(s.chaos).filter(([k, v]) => FAULTS.some((f) => f[0] === k) && v > 0).length;
+  $("#profiles").innerHTML = s.profiles.map((p) => `<button class="btn" data-profile="${p}">${p}</button>`).join("") +
+    `<span class="muted small">${active ? active + " fault type(s) active" : "no faults active"}</span>`;
+  $("#sliders").innerHTML = FAULTS.map(([k, label]) => `<div class="slider"><span>${label}</span>
+    <input type="range" min="0" max="1" step="0.05" value="${s.chaos[k]}" data-fault="${k}">
+    <span class="mono">${Math.round(s.chaos[k] * 100)}%</span></div>`).join("") +
+    `<div class="slider"><span>Simulated latency</span><input type="range" min="0" max="1500" step="50" value="${s.chaos.latency_ms}" data-fault="latency_ms"><span class="mono">${s.chaos.latency_ms}ms</span></div>`;
+  $("#breakers").innerHTML = `<table><tr><th>Provider</th><th>State</th><th class="num">Recent failures</th><th class="num">Opened</th></tr>` +
+    s.breakers.map((b) => `<tr><td>${esc(b.name)}</td><td>${badge(b.state, b.state.replace("_", "-") + (b.retry_in_s ? " · probe in " + b.retry_in_s + "s" : ""))}</td>
+      <td class="num">${b.recent_failures}/${b.recent_calls}</td><td class="num">${b.times_opened}×</td></tr>`).join("") + "</table>";
+  const c = s.metrics.counters, inj = Object.values(s.chaos.injected).reduce((a, b) => a + b, 0);
+  const tiles = [["Requests", c.requests || 0], ["Answered", (c["status.answered"] || 0) + (c["status.degraded"] || 0)],
+    ["Failed", c["status.failed"] || 0], ["Faults injected", inj], ["Failed attempts absorbed", c.retries || 0],
+    ["Served by fallback", c.fallbacks || 0], ["Bad outputs blocked", c.blocked_outputs || 0], ["p95 latency", Math.round(s.metrics.p95_ms) + " ms"]];
+  $("#counters").innerHTML = tiles.map(([l, v]) => `<div class="tile"><div class="v">${v}</div><div class="l">${l}</div></div>`).join("");
+  $("#recent").innerHTML = s.metrics.recent.length ? `<table><tr><th>Question</th><th>Outcome</th><th>Served by</th><th class="num">Failed attempts</th><th class="num">Latency</th></tr>` +
+    s.metrics.recent.slice(0, 12).map((r) => `<tr><td>${esc(r.question)}</td><td>${badge(r.status)}</td><td>${esc(r.served_by || "-")}</td>
+      <td class="num">${r.retries}</td><td class="num">${r.ms} ms</td></tr>`).join("") + "</table>" : '<span class="muted">No requests yet.</span>';
+}
+async function refreshStatus() { try { renderStatus(await api("/api/status")); } catch (e) { $("#chain").textContent = e.message; } }
+$("#profiles").addEventListener("click", async (e) => { if (e.target.dataset.profile) renderStatus(await api("/api/chaos", { profile: e.target.dataset.profile })); });
+$("#sliders").addEventListener("change", async (e) => { const k = e.target.dataset.fault; if (k) renderStatus(await api("/api/chaos", { [k]: Number(e.target.value) })); });
+$("#reset").addEventListener("click", async () => { $("#strip").innerHTML = ""; $("#burstSummary").textContent = ""; renderStatus(await api("/api/reset", {})); });
+async function burst(n = 30) {
+  $("#burst").disabled = true; const naive = $("#burstNaive").checked;
+  const strip = $("#strip"); strip.innerHTML = Array.from({ length: n }, () => "<i></i>").join("");
+  const tally = {}; const pool = examplesList.slice(0, 5);
+  for (let i = 0; i < n; i++) {
+    let status = "failed";
+    try { status = (await streamAsk({ question: pool[i % pool.length], resilience: !naive, validation: !naive })).status; } catch (e) {}
+    strip.children[i].className = status; strip.children[i].title = status; tally[status] = (tally[status] || 0) + 1;
+    if (i % 5 === 4) refreshStatus();
+  }
+  const served = (tally.answered || 0) + (tally.degraded || 0) + (tally.abstained || 0);
+  $("#burstSummary").textContent = `${naive ? "Unprotected" : "Protected"} run: ${served}/${n} requests got a usable response, ${tally.failed || 0} failed.`;
+  await refreshStatus(); $("#burst").disabled = false;
+}
+$("#burst").addEventListener("click", () => burst());
+
+/* ---------- evals ---------- */
+async function loadEvals() {
+  try {
+    const { report: r, source } = await api("/api/eval");
+    const cols = ["recall@1", "recall@5", "recall@10", "mrr@10", "ndcg@10"];
+    const retrieval = Object.entries(r.retrieval).map(([mode, v]) => `<tr><td><code>${esc(mode)}</code></td>${cols.map((c) => `<td class="num">${meter(v.test[c])}</td>`).join("")}</tr>`).join("");
+    const a = r.answers;
+    const ansRow = (label, m) => `<tr><td>${label}</td><td class="num">${m.n}</td><td class="num">${meter(m.answer_accuracy)}</td><td class="num">${meter(m.wrong_answer_rate, true)}</td>
+      <td class="num">${meter(m.false_abstain_rate, true)}</td><td class="num">${meter(m.refusal_accuracy)}</td><td class="num">${meter(m.citation_precision)}</td><td class="num">${m.p95_ms} ms</td></tr>`;
+    const res = Object.entries(r.resilience).map(([profile, vs]) => Object.entries(vs).map(([name, m], i) => `<tr>
+      <td>${i === 0 ? "<b>" + esc(profile) + "</b>" : ""}</td><td>${esc(name)}</td><td class="num">${meter(m.availability)}</td><td class="num">${meter(m.correct)}</td>
+      <td class="num">${meter(m.poisoned_served, true)}</td><td class="num">${pct(m.fallback_rate)}</td><td class="num">${m.mean_attempts}</td></tr>`).join("")).join("");
+    const misses = a.rows.filter((x) => x.type !== "unanswerable" && !x.correct);
+    $("#evalBody").className = ""; $("#evalBody").innerHTML = `
+      <div class="card"><h2>Evaluation report</h2><p class="lead">${r.dataset.items} golden questions (${r.dataset.answerable} answerable, ${r.dataset.unanswerable} that must be refused) over
+        ${r.corpus.papers} papers / ${r.corpus.chunks} chunks. Generator <code>${esc(r.model)}</code>. Generated ${esc(r.generated_at)} in ${r.seconds}s
+        <span class="muted">(${esc(source)})</span>. Deterministic, so it gates CI.</p></div>
+      <div class="card"><h2>Retrieval ablation - held-out test split</h2>
+        <table><tr><th>Mode</th>${cols.map((c) => `<th class="num">${c}</th>`).join("")}</tr>${retrieval}</table></div>
+      <div class="card"><h2>Answer quality</h2>
+        <table><tr><th>Split</th><th class="num">n</th><th class="num">Answer accuracy</th><th class="num">Wrong answers</th><th class="num">False refusals</th>
+        <th class="num">Correct refusals</th><th class="num">Citation precision</th><th class="num">p95</th></tr>
+        ${ansRow("test (held out)", a.test)}${ansRow("dev (tuned on)", a.dev)}${ansRow("all", a.metrics)}</table></div>
+      <div class="card"><h2>Resilience under injected faults</h2>
+        <p class="lead">Same questions, three seeded rounds per row. <b>Poisoned</b> = a fabricated or uncited claim reached the user.</p>
+        <table><tr><th>Fault profile</th><th>Pipeline</th><th class="num">Availability</th><th class="num">Correct</th><th class="num">Poisoned served</th>
+        <th class="num">Fallback rate</th><th class="num">Attempts</th></tr>${res}</table></div>
+      <div class="card"><h2>Misses (${misses.length})</h2><table><tr><th>Question</th><th>Split</th><th>Outcome</th><th>What was served</th></tr>
+        ${misses.map((m) => `<tr><td>${esc(m.question)}</td><td>${m.split}</td><td>${badge(m.status)}</td><td class="muted small">${esc(m.answer.slice(0, 160)) || "-"}</td></tr>`).join("")}</table></div>`;
+  } catch (e) { $("#evalBody").textContent = e.message; }
+}
+
+/* ---------- corpus ---------- */
+async function loadCorpus() {
+  try {
+    const { documents, report: r } = await api("/api/corpus");
+    const rej = Object.values(r.rejected || {}).reduce((a, b) => a + b, 0);
+    const tiles = [["Papers", documents.length], ["Pages", documents.reduce((a, d) => a + d.n_pages, 0)], ["Chunks indexed", r.chunks_indexed],
+      ["Tables recovered", (r.chunk_kinds || {}).table || 0], ["Rejected by quality gates", rej], ["Dense dims", (r.index || {}).dense_dims]];
+    $("#corpusBody").className = ""; $("#corpusBody").innerHTML = `
+      <div class="card"><h2>Ingestion</h2><div class="tiles">${tiles.map(([l, v]) => `<div class="tile"><div class="v">${v ?? "-"}</div><div class="l">${l}</div></div>`).join("")}</div>
+        <p class="muted small" style="margin:10px 0 0">Quality gates: ${Object.entries(r.rejected || {}).map(([k, v]) => `${k.replaceAll("_", " ")} ${v}`).join(" · ")} · pipeline ${esc(r.pipeline_version)} · last run ${esc(r.finished_at)} (${r.seconds}s)</p></div>
+      <div class="card"><h2>Documents</h2><table><tr><th>Paper</th><th>Year</th><th>Status</th><th class="num">Pages</th><th class="num">Chunks</th><th class="num">Tables</th>
+        <th class="num">Headings</th><th class="num">Boilerplate removed</th><th class="num">Small print dropped</th></tr>
+        ${documents.map((d) => `<tr><td><a href="${esc(d.url)}" target="_blank" rel="noopener" style="color:var(--accent-ink)">${esc(d.title)}</a>
+          ${d.issues.length ? '<div class="ev-err small">' + esc(d.issues.join("; ")) + "</div>" : ""}</td><td>${d.year}</td><td>${badge(d.status === "ok" ? "ok" : "degraded", d.status)}</td>
+          <td class="num">${d.n_pages}</td><td class="num">${d.chunks}</td><td class="num">${d.stats.tables || 0}</td><td class="num">${d.stats.headings || 0}</td>
+          <td class="num">${d.stats.boilerplate_blocks || 0}</td><td class="num">${d.stats.small_print_blocks || 0}</td></tr>`).join("")}</table></div>`;
+  } catch (e) { $("#corpusBody").textContent = e.message; }
+}
+
+/* ---------- boot ---------- */
+(async () => {
+  try {
+    examplesList = (await api("/api/examples")).questions;
+    $("#examples").innerHTML = examplesList.map((q) => `<span class="chip">${esc(q)}</span>`).join("");
+    $("#examples").addEventListener("click", (e) => { if (e.target.classList.contains("chip")) { $("#q").value = e.target.textContent; ask(); } });
+  } catch (e) {}
+  await refreshStatus();
+  const p = new URLSearchParams(location.search);
+  if (p.get("profile")) await api("/api/chaos", { profile: p.get("profile") });
+  if (p.get("tab")) showTab(p.get("tab"));
+  if (p.get("q")) { $("#q").value = p.get("q"); await ask(); }
+  if (p.get("burst")) await burst(Number(p.get("burst")));
+  document.body.dataset.ready = "1";
+})();
+</script>
+</body>
+</html>

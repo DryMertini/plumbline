@@ -1,0 +1,156 @@
+# Golden evaluation set for the demo corpus.
+#
+# Each answerable item names the paper(s) that contain the answer, `evidence` regexes that
+# identify the answer-bearing passages (a chunk is relevant when it belongs to a gold paper
+# and matches any of them), and `answer` regexes that must ALL appear in a correct answer.
+# Questions are paraphrased rather than copied from the papers, so lexical overlap alone
+# does not solve them. Unanswerable items (docs: []) must be refused.
+#
+# `python -m plumbline.evals.dataset` checks that every item still has evidence in the index.
+items:
+  # ---- Attention Is All You Need ------------------------------------------------
+  - {id: tf-bleu-ende, type: numeric, docs: [transformer],
+     question: "What BLEU score did the big Transformer reach on WMT 2014 English-to-German?",
+     evidence: ['28\.4'], answer: ['28\.4']}
+  - {id: tf-encoder-layers, type: numeric, docs: [transformer],
+     question: "How many identical layers make up the Transformer encoder stack?",
+     evidence: ['N ?= ?6 identical layers'], answer: ['\b6\b']}
+  - {id: tf-warmup, type: numeric, docs: [transformer],
+     question: "How many warmup steps does the Transformer learning-rate schedule use?",
+     evidence: ['warmup_?\s?steps ?= ?4000'], answer: ['4000']}
+  - {id: tf-hardware, type: factoid, docs: [transformer],
+     question: "What GPUs were the Transformer models trained on?",
+     evidence: ['8 NVIDIA P100'], answer: ['P100']}
+  - {id: tf-why-self-attention, type: concept, docs: [transformer],
+     question: "Why can self-attention learn long-range dependencies more easily than recurrent layers?",
+     evidence: ['path length', 'long-range dependencies'], answer: ['path']}
+  # ---- BERT ---------------------------------------------------------------------
+  - {id: bert-mask-rate, type: numeric, docs: [bert],
+     question: "What fraction of input tokens does BERT mask during pre-training?",
+     evidence: ['15% of (all|the)'], answer: ['15%']}
+  - {id: bert-large-params, type: numeric, docs: [bert],
+     question: "How many parameters does the large BERT model have?",
+     evidence: ['340M'], answer: ['340M']}
+  - {id: bert-glue, type: numeric, docs: [bert],
+     question: "What overall GLUE score does BERT achieve?",
+     evidence: ['80\.5%'], answer: ['80\.5']}
+  - {id: bert-pretraining-data, type: factoid, docs: [bert],
+     question: "Which text corpora was BERT pre-trained on?",
+     evidence: ['BooksCorpus'], answer: ['BooksCorpus', 'Wikipedia']}
+  - {id: bert-nsp, type: concept, docs: [bert],
+     question: "Besides masked language modelling, what second objective is BERT pre-trained with?",
+     evidence: ['next sentence prediction'], answer: ['(?i)next sentence prediction']}
+  # ---- Sentence-BERT ------------------------------------------------------------
+  - {id: sbert-speedup, type: numeric, docs: [sbert],
+     question: "How long does it take BERT versus SBERT to find the most similar pair among 10,000 sentences?",
+     evidence: ['65 hours'], answer: ['65 hours', '5 seconds']}
+  - {id: sbert-pooling, type: factoid, docs: [sbert],
+     question: "Which pooling strategy is the SBERT default?",
+     evidence: ['(?i)default configuration is mean', '(?i)mean[- ]strategy'], answer: ['(?i)mean']}
+  # ---- DPR ----------------------------------------------------------------------
+  - {id: dpr-vs-bm25, type: numeric, docs: [dpr],
+     question: "By what margin does the dense retriever beat BM25 on top-20 passage retrieval accuracy?",
+     evidence: ['9%\s*-\s*19%'], answer: ['9%\s*-\s*19%']}
+  - {id: dpr-corpus-size, type: numeric, docs: [dpr],
+     question: "How many Wikipedia passages does DPR retrieve from?",
+     evidence: ['21,015,324', '21 ?(million|M) passages'], answer: ['21,015,324|21 ?(million|M)']}
+  - {id: dpr-index, type: factoid, docs: [dpr],
+     question: "What library does DPR use to index passage vectors for fast search?",
+     evidence: ['FAISS'], answer: ['FAISS']}
+  - {id: dpr-negatives, type: concept, docs: [dpr],
+     question: "What negative passages does the best DPR model train with?",
+     evidence: ['one BM25 negative'], answer: ['BM25']}
+  # ---- ColBERT ------------------------------------------------------------------
+  - {id: colbert-maxsim, type: concept, docs: [colbert],
+     question: "Which operator does ColBERT use to score a query against a document?",
+     evidence: ['MaxSim'], answer: ['MaxSim|maximum similarity']}
+  - {id: colbert-speed, type: numeric, docs: [colbert],
+     question: "How much faster is ColBERT than earlier BERT-based ranking models?",
+     evidence: ['two orders-of-magnitude faster'], answer: ['two orders']}
+  - {id: colbert-query-aug, type: concept, docs: [colbert],
+     question: "What tokens does ColBERT pad queries with for query augmentation?",
+     evidence: ['(?i)query augmentation'], answer: ['(?i)\[?mask\]?']}
+  # ---- RAG ----------------------------------------------------------------------
+  - {id: rag-formulations, type: factoid, docs: [rag],
+     question: "What are the two RAG model formulations called?",
+     evidence: ['RAG-Sequence'], answer: ['RAG-Sequence', 'RAG-Token']}
+  - {id: rag-generator, type: factoid, docs: [rag],
+     question: "Which seq2seq model is the generator component of RAG?",
+     evidence: ['BART-large'], answer: ['BART']}
+  - {id: rag-retriever, type: factoid, docs: [rag],
+     question: "Which retriever supplies documents to the RAG generator?",
+     evidence: ['Dense Passage Retriever', 'bi-encoder'], answer: ['DPR|Dense Passage Retriev']}
+  - {id: rag-memory, type: concept, docs: [rag],
+     question: "What is the non-parametric memory in RAG?",
+     evidence: ['non-parametric memory is a dense vector index'], answer: ['Wikipedia']}
+  # ---- BEIR ---------------------------------------------------------------------
+  - {id: beir-datasets, type: numeric, docs: [beir],
+     question: "How many datasets are in the BEIR benchmark?",
+     evidence: ['18 (publicly available )?datasets'], answer: ['\b18\b']}
+  - {id: beir-baseline, type: concept, docs: [beir],
+     question: "Which model does BEIR identify as a robust baseline for zero-shot retrieval?",
+     evidence: ['BM25 is a robust baseline'], answer: ['BM25']}
+  - {id: beir-metric, type: factoid, docs: [beir],
+     question: "What metric does BEIR report as its primary measure?",
+     evidence: ['nDCG@10'], answer: ['nDCG@10']}
+  # ---- LoRA ---------------------------------------------------------------------
+  - {id: lora-param-reduction, type: numeric, docs: [lora],
+     question: "By what factor does LoRA cut the number of trainable parameters compared with fine-tuning GPT-3?",
+     evidence: ['10,000 times'], answer: ['10,000']}
+  - {id: lora-latency, type: concept, docs: [lora],
+     question: "Does LoRA slow down inference?",
+     evidence: ['(?i)no additional inference latency'], answer: ['(?i)no (additional )?inference latency']}
+  - {id: lora-init, type: concept, docs: [lora],
+     question: "How are the two low-rank matrices in LoRA initialised?",
+     evidence: ['random Gaussian initialization for A'], answer: ['Gaussian', '(?i)zero']}
+  # ---- Chain-of-Thought ---------------------------------------------------------
+  - {id: cot-exemplars, type: numeric, docs: [cot],
+     question: "How many chain-of-thought exemplars does PaLM 540B need for state-of-the-art GSM8K accuracy?",
+     evidence: ['eight chain[- ]of[- ]thought exemplars'], answer: ['(?i)eight|\b8\b']}
+  - {id: cot-task-families, type: factoid, docs: [cot],
+     question: "On which three kinds of reasoning tasks is chain-of-thought prompting evaluated?",
+     evidence: ['arithmetic, commonsense, and symbolic'], answer: ['(?i)arithmetic', '(?i)commonsense', '(?i)symbolic']}
+  # ---- ReAct --------------------------------------------------------------------
+  - {id: react-tool, type: factoid, docs: [react],
+     question: "What external tool does ReAct call for HotpotQA and Fever?",
+     evidence: ['Wikipedia API'], answer: ['Wikipedia API']}
+  - {id: react-decision-gains, type: numeric, docs: [react],
+     question: "How large is ReAct's success-rate gain over imitation and reinforcement learning on ALFWorld and WebShop?",
+     evidence: ['34% and 10%'], answer: ['34%', '10%']}
+  # ---- HyDE ---------------------------------------------------------------------
+  - {id: hyde-encoder, type: factoid, docs: [hyde],
+     question: "Which unsupervised encoder turns the hypothetical document into an embedding in HyDE?",
+     evidence: ['Contriever'], answer: ['Contriever']}
+  - {id: hyde-name, type: factoid, docs: [hyde],
+     question: "What is HyDE short for?",
+     evidence: ['Hypothetical Document Embeddings'], answer: ['(?i)hypothetical document embeddings']}
+  # ---- Lost in the Middle -------------------------------------------------------
+  - {id: lim-curve, type: concept, docs: [lost-middle],
+     question: "What shape does model accuracy trace as the relevant document moves through the context?",
+     evidence: ['U-shaped'], answer: ['U-shaped']}
+  - {id: lim-best-position, type: concept, docs: [lost-middle],
+     question: "Where should relevant information sit in the input for language models to use it best?",
+     evidence: ['beginning or (the )?end'], answer: ['(?i)beginning', '(?i)end']}
+  # ---- RAGAS --------------------------------------------------------------------
+  - {id: ragas-dimensions, type: factoid, docs: [ragas],
+     question: "Which quality aspects of a RAG system does RAGAS score?",
+     evidence: ['(?i)faithfulness'], answer: ['(?i)faithfulness', '(?i)relevan']}
+  - {id: ragas-dataset, type: factoid, docs: [ragas],
+     question: "What dataset did the RAGAS authors create to test their metrics?",
+     evidence: ['WikiEval'], answer: ['WikiEval']}
+  # ---- Self-RAG -----------------------------------------------------------------
+  - {id: selfrag-tokens, type: concept, docs: [self-rag],
+     question: "What special tokens let Self-RAG decide when to retrieve and critique its own output?",
+     evidence: ['reflection tokens'], answer: ['(?i)reflection tokens']}
+  # ---- Unanswerable: out of domain ----------------------------------------------
+  - {id: un-capital, type: unanswerable, docs: [], question: "What is the capital of Australia?"}
+  - {id: un-worldcup, type: unanswerable, docs: [], question: "Who won the 2022 FIFA World Cup?"}
+  - {id: un-ethanol, type: unanswerable, docs: [], question: "What is the boiling point of ethanol?"}
+  - {id: un-ceo, type: unanswerable, docs: [], question: "Who is the chief executive of Nvidia?"}
+  # ---- Unanswerable: in domain, but not in these papers ---------------------------
+  - {id: un-gpt4-heads, type: unanswerable, docs: [], question: "How many attention heads does GPT-4 use?"}
+  - {id: un-mistral, type: unanswerable, docs: [], question: "How many parameters does Mistral 7B have?"}
+  - {id: un-llama-lr, type: unanswerable, docs: [], question: "What learning rate was Llama 2 fine-tuned with?"}
+  - {id: un-colbert-bleu, type: unanswerable, docs: [], question: "What BLEU score does ColBERT get on WMT 2014 English-to-German?"}
+  - {id: un-ragas-gpus, type: unanswerable, docs: [], question: "How many GPUs was the RAGAS model trained on?"}
+  - {id: un-qlora, type: unanswerable, docs: [], question: "What quantisation bit-width does QLoRA use?"}
