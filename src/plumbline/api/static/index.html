@@ -317,7 +317,7 @@ $("#q").addEventListener("keydown", (e) => e.key === "Enter" && ask());
 const FAULTS = [["timeout", "Timeout (call hangs)"], ["rate_limit", "Rate limit (429)"], ["server_error", "Server error (503)"],
   ["malformed_json", "Truncated JSON"], ["schema_violation", "Schema drift"], ["bad_citation", "Cites a ghost passage"],
   ["ungrounded_claim", "Fabricated claim"]];
-let examplesList = [];
+let examplesList = [], bursting = false;
 function renderStatus(s) {
   $("#chain").textContent = "chain: " + s.chain.map((p) => p.name).join(" → ");
   const active = Object.entries(s.chaos).filter(([k, v]) => FAULTS.some((f) => f[0] === k) && v > 0).length;
@@ -335,6 +335,10 @@ function renderStatus(s) {
     ["Failed", c["status.failed"] || 0], ["Faults injected", inj], ["Failed attempts absorbed", c.retries || 0],
     ["Served by fallback", c.fallbacks || 0], ["Bad outputs blocked", c.blocked_outputs || 0], ["p95 latency", Math.round(s.metrics.p95_ms) + " ms"]];
   $("#counters").innerHTML = tiles.map(([l, v]) => `<div class="tile"><div class="v">${v}</div><div class="l">${l}</div></div>`).join("");
+  if (!bursting) {  // after a reload, rebuild the outcome strip from what the server remembers
+    const past = s.metrics.recent.slice().reverse();
+    $("#strip").innerHTML = past.map((r) => `<i class="${esc(r.status)}" title="${esc(r.status)}"></i>`).join("");
+  }
   $("#recent").innerHTML = s.metrics.recent.length ? `<table><tr><th>Question</th><th>Outcome</th><th>Served by</th><th class="num">Failed attempts</th><th class="num">Latency</th></tr>` +
     s.metrics.recent.slice(0, 12).map((r) => `<tr><td>${esc(r.question)}</td><td>${badge(r.status)}</td><td>${esc(r.served_by || "-")}</td>
       <td class="num">${r.retries}</td><td class="num">${r.ms} ms</td></tr>`).join("") + "</table>" : '<span class="muted">No requests yet.</span>';
@@ -344,7 +348,7 @@ $("#profiles").addEventListener("click", async (e) => { if (e.target.dataset.pro
 $("#sliders").addEventListener("change", async (e) => { const k = e.target.dataset.fault; if (k) renderStatus(await api("/api/chaos", { [k]: Number(e.target.value) })); });
 $("#reset").addEventListener("click", async () => { $("#strip").innerHTML = ""; $("#burstSummary").textContent = ""; renderStatus(await api("/api/reset", {})); });
 async function burst(n = 30) {
-  $("#burst").disabled = true; const naive = $("#burstNaive").checked;
+  $("#burst").disabled = true; bursting = true; const naive = $("#burstNaive").checked;
   const strip = $("#strip"); strip.innerHTML = Array.from({ length: n }, () => "<i></i>").join("");
   const tally = {}; const pool = examplesList.slice(0, 5);
   for (let i = 0; i < n; i++) {
@@ -355,7 +359,7 @@ async function burst(n = 30) {
   }
   const served = (tally.answered || 0) + (tally.degraded || 0) + (tally.abstained || 0);
   $("#burstSummary").textContent = `${naive ? "Unprotected" : "Protected"} run: ${served}/${n} requests got a usable response, ${tally.failed || 0} failed.`;
-  await refreshStatus(); $("#burst").disabled = false;
+  bursting = false; await refreshStatus(); $("#burst").disabled = false;
 }
 $("#burst").addEventListener("click", () => burst());
 

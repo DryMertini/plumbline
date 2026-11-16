@@ -1,6 +1,6 @@
 # Evaluation report
 
-Generated 2026-11-16T09:52:36Z - 14 papers, 899 chunks, 50 golden questions (40 answerable, 10 unanswerable). Generator: `extractive-reader-v1`. Run time 32.8s.
+Generated 2026-11-16T10:03:11Z - 14 papers, 899 chunks, 50 golden questions (40 answerable, 10 unanswerable). Generator: `extractive-reader-v1`. Run time 33.8s.
 
 ## 1. Retrieval ablation
 
@@ -21,9 +21,9 @@ Share of answerable questions whose answer-bearing passage is retrieved. Reranke
 
 | Split | n | Answer accuracy | Wrong answers | False refusals | Correct refusals | Citation precision | p50 | p95 |
 |---|---:|---:|---:|---:|---:|---:|---:|---:|
-| test | 24 | 63.2% | 26.3% | 10.5% | 100.0% | 100.0% | 16.8 ms | 19.5 ms |
-| dev | 26 | 57.1% | 38.1% | 4.8% | 100.0% | 95.8% | 17.4 ms | 19.3 ms |
-| all | 50 | 60.0% | 32.5% | 7.5% | 100.0% | 97.8% | 16.9 ms | 19.5 ms |
+| test | 24 | 63.2% | 26.3% | 10.5% | 100.0% | 100.0% | 16.7 ms | 20.0 ms |
+| dev | 26 | 57.1% | 38.1% | 4.8% | 100.0% | 95.8% | 17.2 ms | 19.3 ms |
+| all | 50 | 60.0% | 32.5% | 7.5% | 100.0% | 97.8% | 16.8 ms | 20.0 ms |
 
 ## 3. Resilience under injected faults
 
@@ -33,16 +33,16 @@ Every answerable question, three seeded rounds per cell. *Availability* = the us
 |---|---|---:|---:|---:|---:|---:|
 | flaky-network | naive | 52.5% | 31.7% | 0.0% | 0.0% | 1.0 |
 | flaky-network | validation only | 52.5% | 31.7% | 0.0% | 0.0% | 1.0 |
-| flaky-network | resilient | 100.0% | 60.0% | 0.0% | 69.2% | 1.85 |
+| flaky-network | resilient | 100.0% | 60.0% | 0.0% | 43.3% | 1.74 |
 | bad-outputs | naive | 69.2% | 40.8% | 22.5% | 0.0% | 1.0 |
 | bad-outputs | validation only | 68.3% | 35.8% | 0.0% | 0.0% | 1.0 |
-| bad-outputs | resilient | 100.0% | 56.7% | 0.0% | 60.0% | 1.74 |
+| bad-outputs | resilient | 100.0% | 53.3% | 0.0% | 14.2% | 1.48 |
 | everything | naive | 54.2% | 30.8% | 7.5% | 0.0% | 1.0 |
 | everything | validation only | 54.2% | 30.0% | 0.0% | 0.0% | 1.0 |
-| everything | resilient | 100.0% | 58.3% | 0.0% | 65.0% | 1.85 |
+| everything | resilient | 100.0% | 58.3% | 0.0% | 35.8% | 1.77 |
 | outage | naive | 0.0% | 0.0% | 0.0% | 0.0% | 1.0 |
 | outage | validation only | 0.0% | 0.0% | 0.0% | 0.0% | 1.0 |
-| outage | resilient | 100.0% | 60.0% | 0.0% | 100.0% | 2.05 |
+| outage | resilient | 100.0% | 60.0% | 0.0% | 100.0% | 2.1 |
 
 ## Misses
 

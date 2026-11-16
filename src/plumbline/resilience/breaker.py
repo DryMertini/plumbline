@@ -17,10 +17,10 @@ class CircuitBreaker:
         self,
         name: str,
         *,
-        window: int = 8,
-        min_calls: int = 4,
-        failure_rate: float = 0.5,
-        cooldown_s: float = 10.0,
+        window: int = 10,
+        min_calls: int = 6,
+        failure_rate: float = 0.6,
+        cooldown_s: float = 5.0,
         clock: Callable[[], float] = time.monotonic,
     ):
         self.name = name

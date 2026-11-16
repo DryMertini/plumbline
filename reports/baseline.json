@@ -1,5 +1,5 @@
 {
- "generated_at": "2026-11-16T09:52:36Z",
+ "generated_at": "2026-11-16T10:03:11Z",
  "corpus": {
   "chunks": 899,
   "papers": 14
@@ -156,8 +156,8 @@
    "citation_precision": 0.9775,
    "refusal_accuracy": 1.0,
    "failure_rate": 0.0,
-   "p50_ms": 16.9,
-   "p95_ms": 19.5
+   "p50_ms": 16.8,
+   "p95_ms": 20.0
   },
   "dev": {
    "n": 26,
@@ -167,7 +167,7 @@
    "citation_precision": 0.9583,
    "refusal_accuracy": 1.0,
    "failure_rate": 0.0,
-   "p50_ms": 17.4,
+   "p50_ms": 17.2,
    "p95_ms": 19.3
   },
   "test": {
@@ -178,8 +178,8 @@
    "citation_precision": 1.0,
    "refusal_accuracy": 1.0,
    "failure_rate": 0.0,
-   "p50_ms": 16.8,
-   "p95_ms": 19.5
+   "p50_ms": 16.7,
+   "p95_ms": 20.0
   },
   "rows": [
    {
@@ -219,7 +219,7 @@
     "retries": 0,
     "fallback": false,
     "attempts": 1,
-    "ms": 17.8,
+    "ms": 18.4,
     "answer": "Encoder: The encoder is composed of a stack of N = 6 identical layers. Model Architecture BERT's model architecture is a multi-layer bidirectional Transformer encoder based on the original implementation described in Vaswani et al. (2017) and released in the tensor2tensor library.1 Because the use o"
    },
    {
@@ -239,7 +239,7 @@
     "retries": 0,
     "fallback": false,
     "attempts": 1,
-    "ms": 17.0,
+    "ms": 17.5,
     "answer": "We use Adam with learning rate of 1e-4, \u03b21 = 0.9, \u03b22 = 0.999, L2 weight decay of 0.01, learning rate warmup over the first 10,000 steps, and linear decay of the learning rate. We varied the learning rate over the course of training, according to the formula: This corresponds to increasing the learni"
    },
    {
@@ -259,7 +259,7 @@
     "retries": 0,
     "fallback": false,
     "attempts": 1,
-    "ms": 19.2,
+    "ms": 20.0,
     "answer": "On the WMT 2014 English-to-French translation task, our model establishes a new single-model state-of-the-art BLEU score of 41.8 after training for 3.5 days on eight GPUs, a small fraction of the training costs of the best models from the literature. We trained our models on one machine with 8 NVIDI"
    },
    {
@@ -279,7 +279,7 @@
     "retries": 0,
     "fallback": false,
     "attempts": 1,
-    "ms": 17.7,
+    "ms": 18.1,
     "answer": "Learning long-range dependencies is a key challenge in many sequence transduction tasks. The shorter these paths between any combination of positions in the input and output sequences, the easier it is to learn long-range dependencies [12]. The third is the path length between long-range dependencie"
    },
    {
@@ -319,7 +319,7 @@
     "retries": 0,
     "fallback": false,
     "attempts": 1,
-    "ms": 18.9,
+    "ms": 18.5,
     "answer": "For fine-tuning, the BERT model is first initialized with the pre-trained parameters, and all of the parameters are fine-tuned using labeled data from the downstream tasks. Our task-specific models are formed by incorporating BERT with one additional output layer, so a minimal number of parameters n"
    },
    {
@@ -339,7 +339,7 @@
     "retries": 0,
     "fallback": false,
     "attempts": 1,
-    "ms": 20.6,
+    "ms": 19.3,
     "answer": "Table 1: GLUE Test results, scored by the evaluation server (https://gluebenchmark.com/leaderboard). The number below each task denotes the number of training examples. The \"Average\" column is slightly different than the official GLUE score, since we exclude the problematic WNLI set.8 BERT and OpenA"
    },
    {
@@ -359,7 +359,7 @@
     "retries": 0,
     "fallback": false,
     "attempts": 1,
-    "ms": 16.2,
+    "ms": 15.8,
     "answer": "Unlike recent language representation models (Peters et al., 2018a; Radford et al., 2018), BERT is designed to pre-train deep bidirectional representations from unlabeled text by jointly conditioning on both left and right context in all layers. The most comparable existing pre-training method to BE"
    },
    {
@@ -379,7 +379,7 @@
     "retries": 0,
     "fallback": false,
     "attempts": 1,
-    "ms": 19.3,
+    "ms": 18.5,
     "answer": "BERT alleviates the previously mentioned unidirectionality constraint by using a \"masked language model\" (MLM) pre-training objective, inspired by the Cloze task (Taylor, 1953). C.2 Ablation for Different Masking Procedures In Section 3.1, we mention that BERT uses a mixed strategy for masking the t"
    },
    {
@@ -399,7 +399,7 @@
     "retries": 0,
     "fallback": false,
     "attempts": 1,
-    "ms": 20.4,
+    "ms": 20.3,
     "answer": "The complexity for finding the most similar sentence pair in a collection of 10,000 sentences is reduced from 65 hours with BERT to the computation of 10,000 sentence embeddings (~5 seconds with SBERT) and computing cosine-similarity (~0.01 seconds). However, it requires that both sentences are fed "
    },
    {
@@ -419,7 +419,7 @@
     "retries": 0,
     "fallback": false,
     "attempts": 1,
-    "ms": 16.7,
+    "ms": 16.8,
     "answer": "Our default pooling strategy is MEAN. Table 6: SBERT trained on NLI data with the classification objective function, on the STS benchmark (STSb) with the regression objective function. Configurations are evaluated on the development set of the STSb using cosine-similarity and Spearman's rank correla"
    },
    {
@@ -439,7 +439,7 @@
     "retries": 0,
     "fallback": false,
     "attempts": 1,
-    "ms": 15.6,
+    "ms": 16.4,
     "answer": "When evaluated on a wide range of open-domain QA datasets, our dense retriever outperforms a strong Lucene- BM25 system greatly by 9%-19% absolute in terms of top-20 passage retrieval accuracy, and helps our end-to-end QA system establish new state-of-the-art on multiple open-domain QA benchmarks.1 "
    },
    {
@@ -459,7 +459,7 @@
     "retries": 0,
     "fallback": false,
     "attempts": 1,
-    "ms": 14.6,
+    "ms": 15.0,
     "answer": ""
    },
    {
@@ -479,7 +479,7 @@
     "retries": 0,
     "fallback": false,
     "attempts": 1,
-    "ms": 18.0,
+    "ms": 18.6,
     "answer": "Our dense passage retriever (DPR) uses a dense encoder EP (\u00b7) which maps any text passage to a d-dimensional real-valued vectors and builds an index for all the M passages that we will use for retrieval. Given a collection of M text passages, the goal of our dense passage retriever (DPR) is to index"
    },
    {
@@ -499,7 +499,7 @@
     "retries": 0,
     "fallback": false,
     "attempts": 1,
-    "ms": 16.0,
+    "ms": 16.4,
     "answer": "The DPR model used in our main experiments is trained using the in-batch negative setting (Section 3.2) with a batch size of 128 and one additional BM25 negative passage per question. Our best model uses gold passages from the same mini-batch and one BM25 negative passage. We will discuss the impact"
    },
    {
@@ -519,7 +519,7 @@
     "retries": 0,
     "fallback": false,
     "attempts": 1,
-    "ms": 19.2,
+    "ms": 20.0,
     "answer": "Using Eq and Ed, ColBERT computes the relevance score between q and d via late interaction, which we define as a summation of maximum similarity (MaxSim) operators. As illustrated, every query embedding interacts with all document embeddings via a MaxSim operator, which computes maximum similarity ("
    },
    {
@@ -539,7 +539,7 @@
     "retries": 0,
     "fallback": false,
     "attempts": 1,
-    "ms": 19.5,
+    "ms": 19.4,
     "answer": "Our results show that ColBERT is more than 170\u00d7 faster and requires 14,000\u00d7 fewer FLOPs/query than existing BERT-based models, all while only minimally impacting quality and while outperforming every non-BERT baseline. Tis quality-cost tradeoffis summarized by Figure 1, which compares two BERT-based"
    },
    {
@@ -559,7 +559,7 @@
     "retries": 0,
     "fallback": false,
     "attempts": 1,
-    "ms": 18.6,
+    "ms": 18.9,
     "answer": "(\u00a74.3) RQ3: What does each component of ColBERT (e.g., late interaction, query augmentation) contribute to its quality? Similarly, the figure emphasizes the importance of our query augmentation mechanism: without query augmentation [C], ColBERT has a noticeably lower MRR@10. We denote the padding wi"
    },
    {
@@ -579,7 +579,7 @@
     "retries": 0,
     "fallback": false,
     "attempts": 1,
-    "ms": 17.6,
+    "ms": 17.5,
     "answer": "We compare two RAG formulations, one which conditions on the same retrieved passages across the whole generated sequence, and another which can use different passages per token."
    },
    {
@@ -599,7 +599,7 @@
     "retries": 0,
     "fallback": false,
     "attempts": 1,
-    "ms": 16.2,
+    "ms": 15.7,
     "answer": "Like T5 [51] or BART, RAG can be fine-tuned on any seq2seq task, whereby both the generator and retriever are jointly learned. We combine a pre-trained retriever (Query Encoder + Document Index) with a pre-trained seq2seq model (Generator) and fine-tune end-to-end. The generator component p\u03b8(yi|x, z"
    },
    {
@@ -619,7 +619,7 @@
     "retries": 0,
     "fallback": false,
     "attempts": 1,
-    "ms": 17.6,
+    "ms": 17.2,
     "answer": "Concretely, the top K documents are retrieved using the retriever, and then the generator produces a distribution for the next output token for each document, before marginalizing, and repeating the process with the following output token, Formally, we define: Finally, we note that RAG can be used f"
    },
    {
@@ -639,7 +639,7 @@
     "retries": 0,
     "fallback": false,
     "attempts": 1,
-    "ms": 16.5,
+    "ms": 16.7,
     "answer": "We explore a general-purpose fine-tuning recipe for retrieval-augmented generation (RAG) - models which combine pre-trained parametric and non-parametric memory for language generation. We introduce RAG models where the parametric memory is a pre-trained seq2seq model and the non-parametric memory i"
    },
    {
@@ -659,7 +659,7 @@
     "retries": 0,
     "fallback": false,
     "attempts": 1,
-    "ms": 14.9,
+    "ms": 14.7,
     "answer": "Table 1: Statistics of datasets in BEIR benchmark. Few datasets contain documents without titles. Relevancy indicates the query-document relation: binary (relevant, non-relevant) or graded into sub-levels. Avg. D/Q indicates the average relevant documents per query. Figure 1 shows an overview of the"
    },
    {
@@ -699,7 +699,7 @@
     "retries": 0,
     "fallback": false,
     "attempts": 1,
-    "ms": 17.7,
+    "ms": 17.2,
     "answer": "To obtain comparable results across models and datasets in BEIR, we argue that it is important to leverage a single evaluation metric that can be computed comparably across all tasks. We provide the following additional sections in detail and information that complement discussions in the main paper"
    },
    {
@@ -719,7 +719,7 @@
     "retries": 0,
     "fallback": false,
     "attempts": 1,
-    "ms": 16.8,
+    "ms": 16.4,
     "answer": "Compared to GPT-3 175B fine-tuned with Adam, LoRA can reduce the number of trainable parameters by 10,000 times and the GPU memory requirement by 3 times. LoRA performs on-par or better than fine-tuning in model quality on RoBERTa, DeBERTa, GPT-2, and GPT-3, despite having fewer trainable parameters"
    },
    {
@@ -739,7 +739,7 @@
     "retries": 0,
     "fallback": false,
     "attempts": 1,
-    "ms": 15.5,
+    "ms": 14.9,
     "answer": "LoRA performs on-par or better than fine-tuning in model quality on RoBERTa, DeBERTa, GPT-2, and GPT-3, despite having fewer trainable parameters, a higher training throughput, and, unlike adapters, no additional inference latency. We propose LoRA, an efficient adaptation strategy that neither intro"
    },
    {
@@ -759,7 +759,7 @@
     "retries": 0,
     "fallback": false,
     "attempts": 1,
-    "ms": 13.6,
+    "ms": 13.2,
     "answer": "In principle, we can apply LoRA to any subset of weight matrices in a neural network to reduce the number of trainable parameters. The number of trainable parameters is determined by the rank r and the shape of the original weights: |\u0398| = 2 \u00d7 \u02c6LLoRA \u00d7 dmodel \u00d7 r, where \u02c6LLoRA is the number of weight"
    },
    {
@@ -779,7 +779,7 @@
     "retries": 0,
     "fallback": false,
     "attempts": 1,
-    "ms": 17.0,
+    "ms": 16.7,
     "answer": "For instance, prompting a PaLM 540B with just eight chain-of-thought exemplars achieves state-of-the-art accuracy on the GSM8K benchmark of math word problems, surpassing even finetuned GPT-3 with a verifier. Figure 2 illustrates one such result-on the GSM8K benchmark of math word problems (Cobbe et"
    },
    {
@@ -819,7 +819,7 @@
     "retries": 0,
     "fallback": false,
     "attempts": 1,
-    "ms": 17.4,
+    "ms": 18.1,
     "answer": "For HotPotQA and Fever, with access to a Wikipedia API that the model can interact with, ReAct outperforms vanilla action generation models while being competitive with chain-of-thought reasoning (CoT) (Wei et al., 2022). ReAct Prompting For HotpotQA and Fever, we randomly select 6 and 3 cases2 from"
    },
    {
@@ -839,7 +839,7 @@
     "retries": 0,
     "fallback": false,
     "attempts": 1,
-    "ms": 18.2,
+    "ms": 18.7,
     "answer": ""
    },
    {
@@ -859,7 +859,7 @@
     "retries": 0,
     "fallback": false,
     "attempts": 1,
-    "ms": 18.1,
+    "ms": 19.1,
     "answer": "With these ingredients, we propose to pivot through Hypothetical Document Embeddings (HyDE), and decompose dense retrieval into two tasks, a generative task performed by an instruction-following language model and a document-document similarity task performed by a contrastive encoder (Figure 1). Ins"
    },
    {
@@ -879,7 +879,7 @@
     "retries": 0,
     "fallback": false,
     "attempts": 1,
-    "ms": 13.0,
+    "ms": 13.2,
     "answer": "In our experiments, we show HyDE using Instruct- GPT (Ouyang et al., 2022) and Contriever (Izacard et al., 2021) as backbone models significantly outperforms the previous state-of-the-art Contrieveronly zero-shot no-relevance system on 11 queries No model is trained in HyDE: both the generative mode"
    },
    {
@@ -919,7 +919,7 @@
     "retries": 0,
     "fallback": false,
     "attempts": 1,
-    "ms": 16.3,
+    "ms": 16.2,
     "answer": "Our analysis provides a better understanding of how language models use their input context and introduces new evaluation protocols for future long-context models; to claim that a language model can robustly use information within long input contexts, it is necessary to show that its performance is "
    },
    {
@@ -939,7 +939,7 @@
     "retries": 0,
     "fallback": false,
     "attempts": 1,
-    "ms": 16.8,
+    "ms": 17.4,
     "answer": "Finally, we have also described Ragas, our implementation of the three considered quality aspects. Evaluating RAG architectures is, however, challenging because there are several dimensions to consider: the ability of the retrieval system to identify relevant and focused context passages, the abilit"
    },
    {
@@ -959,7 +959,7 @@
     "retries": 0,
     "fallback": false,
     "attempts": 1,
-    "ms": 17.9,
+    "ms": 17.3,
     "answer": "With Ragas, we put forward a suite of metrics which can be used to evaluate these different dimensions without having to rely on ground truth human annotations. To put the results in context, we compare our proposed metrics (shown as Ragas in Table 1) with two baseline methods. Table 1 analyses the "
    },
    {
@@ -979,7 +979,7 @@
     "retries": 0,
     "fallback": false,
     "attempts": 1,
-    "ms": 18.1,
+    "ms": 18.0,
     "answer": "SELF-RAG trains an LM to learn to retrieve, generate, and critique text passages and its own generation by predicting the next tokens from its original vocabulary as well as newly added special tokens, called reflection tokens. Our end-to-end training lets an LM M generate text informed by retrieved"
    },
    {
@@ -1019,7 +1019,7 @@
     "retries": 0,
     "fallback": false,
     "attempts": 1,
-    "ms": 16.9,
+    "ms": 16.7,
     "answer": ""
    },
    {
@@ -1039,7 +1039,7 @@
     "retries": 0,
     "fallback": false,
     "attempts": 0,
-    "ms": 10.0,
+    "ms": 10.1,
     "answer": ""
    },
    {
@@ -1059,7 +1059,7 @@
     "retries": 0,
     "fallback": false,
     "attempts": 1,
-    "ms": 12.8,
+    "ms": 13.2,
     "answer": ""
    },
    {
@@ -1079,7 +1079,7 @@
     "retries": 0,
     "fallback": false,
     "attempts": 1,
-    "ms": 12.7,
+    "ms": 13.1,
     "answer": ""
    },
    {
@@ -1099,7 +1099,7 @@
     "retries": 0,
     "fallback": false,
     "attempts": 1,
-    "ms": 14.0,
+    "ms": 15.0,
     "answer": ""
    },
    {
@@ -1119,7 +1119,7 @@
     "retries": 0,
     "fallback": false,
     "attempts": 1,
-    "ms": 14.9,
+    "ms": 15.1,
     "answer": ""
    },
    {
@@ -1139,7 +1139,7 @@
     "retries": 0,
     "fallback": false,
     "attempts": 1,
-    "ms": 15.5,
+    "ms": 15.4,
     "answer": ""
    },
    {
@@ -1207,8 +1207,8 @@
     "availability": 1.0,
     "correct": 0.6,
     "poisoned_served": 0.0,
-    "fallback_rate": 0.6917,
-    "mean_attempts": 1.85
+    "fallback_rate": 0.4333,
+    "mean_attempts": 1.74
    }
   },
   "bad-outputs": {
@@ -1231,10 +1231,10 @@
    "resilient": {
     "requests": 120,
     "availability": 1.0,
-    "correct": 0.5667,
+    "correct": 0.5333,
     "poisoned_served": 0.0,
-    "fallback_rate": 0.6,
-    "mean_attempts": 1.74
+    "fallback_rate": 0.1417,
+    "mean_attempts": 1.48
    }
   },
   "everything": {
@@ -1259,8 +1259,8 @@
     "availability": 1.0,
     "correct": 0.5833,
     "poisoned_served": 0.0,
-    "fallback_rate": 0.65,
-    "mean_attempts": 1.85
+    "fallback_rate": 0.3583,
+    "mean_attempts": 1.77
    }
   },
   "outage": {
@@ -1286,9 +1286,9 @@
     "correct": 0.6,
     "poisoned_served": 0.0,
     "fallback_rate": 1.0,
-    "mean_attempts": 2.05
+    "mean_attempts": 2.1
    }
   }
  },
- "seconds": 32.8
+ "seconds": 33.8
 }
