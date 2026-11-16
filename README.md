@@ -1,4 +1,4 @@
-# plumbline
+<picture><source media="(prefers-color-scheme: dark)" srcset="docs/img/plumbline-dark.svg"><source media="(prefers-color-scheme: light)" srcset="docs/img/plumbline-light.svg"><img src="docs/img/plumbline-dark.svg" alt="plumbline: the 90% of an LLM app that isn't the LLM." width="100%"></picture>
 
 **The 90% of an LLM app that isn't the LLM.**
 
